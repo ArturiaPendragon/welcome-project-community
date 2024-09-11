@@ -1,3 +1,7 @@
+networks:
+  services:
+    external: true
+
 services:
     rundeck:
         container_name: rundeck
