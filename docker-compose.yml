@@ -72,19 +72,6 @@ services:
         - shared-volume:/app/data/
       networks:
         - services
-    node2:
-      container_name: node2
-      build:
-        context: node-demo
-      ports:
-         - "22"
-      environment:
-        - SSHD_PORT=22
-        - KEY_PATH=/app/data
-      volumes:
-        - shared-volume:/app/data/
-      networks:
-        - services
 
 volumes:
   shared-volume:
