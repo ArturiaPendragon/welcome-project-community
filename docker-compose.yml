@@ -1,4 +1,3 @@
-version: '3'
 services:
     rundeck:
         container_name: rundeck
@@ -9,7 +8,7 @@ services:
         links:
           - mysql
         environment:
-            RUNDECK_GRAILS_URL: http://localhost:4440
+            RUNDECK_GRAILS_URL: https://rundeck.refrain.work
             RUNDECK_DATABASE_DRIVER: org.mariadb.jdbc.Driver
             RUNDECK_DATABASE_USERNAME: rundeck
             RUNDECK_DATABASE_PASSWORD: rundeck
@@ -17,6 +16,12 @@ services:
             RUNDECK_SERVER_ADDRESS: 0.0.0.0
             RUNDECK_FEATURE_UINEXT_NAME: uiNext
             RUNDECK_FEATURE_UINEXT_ENABLED: 'true'
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.rundeck.rule=Host(`rundeck.refrain.work`)"
+          - "traefik.http.routers.rundeck.entrypoints=https"
+          - "traefik.http.routers.rundeck.tls=true"
+          - "traefik.http.services.rundeck.loadbalancer.server.port=4440"
         ports:
           - 4440:4440
     mysql:
@@ -70,15 +75,6 @@ services:
         - KEY_PATH=/app/data
       volumes:
         - shared-volume:/app/data/
-    ciao:
-        container_name: ciao
-        image: brotandgames/ciao
-        ports:
-          - '3000:3000'
-        environment:
-          - 'BASIC_AUTH_USERNAME=admin'
-          - 'BASIC_AUTH_PASSWORD=admin'
-          - 'CIAO_WEBHOOK_ENDPOINT_RUNDECK=http://rundeck:4440/api/38/webhook/fgl0TfHvIDLVXWUXtYDE9Ctxw7dctaxw#Server_Diagnostics_and_Recovery'
 
 volumes:
   shared-volume:
